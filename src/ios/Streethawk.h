@@ -97,7 +97,7 @@
 - (void)registerPushDataCallback:(CDVInvokedUrlCommand *)command;
 
 /**
- * Continue process after show custom dialog using `- (void)registerPushDataCallback:(CDVInvokedUrlCommand *)command`. Command argument is [msgid_int, pushresult_enum(0:accept, 1:postpone, 2:decline)].
+ * Continue process after show custom dialog using `- (void)registerPushDataCallback:(CDVInvokedUrlCommand *)command`. Command argument is [msgid_int, pushresult_enum(1:accept, 0:postpone, -1:decline)].
  */
 - (void)sendPushResult:(CDVInvokedUrlCommand *)command;
 
@@ -127,7 +127,7 @@
 - (void)shGetFeedDataFromServer:(CDVInvokedUrlCommand *)command;
 
 /**
- * Send logline to server for feed result. Command argument is [feedId_int, result_enum(0:accept, 1:postpone, 2:decline)].
+ * Send logline to server for feed result. Command argument is [feedId_int, result_enum(1:accept, 0:postpone, -1:decline)].
  */
 - (void)shReportFeedRead:(CDVInvokedUrlCommand *)command;
 
