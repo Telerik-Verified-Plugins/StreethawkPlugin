@@ -1,3 +1,8 @@
+Version Number   : 1/1.6.2
+Release Date     : 15-July-2015
+Notes:
+1. Fix "containsString" crash on pre-iOS8.
+------------------------------------------------------------------------
 Version Number   : 1/1.6.1
 Release Date     : 9-June-2015
 Notes:
