@@ -1,3 +1,23 @@
+Version Number   : 1/1.6.4
+Release Date     : 27-July-2015
+Notes:
+1. Add back deprecated `- (void)registerInstallForApp:(NSString *)appKey withDebugMode:(BOOL)isDebugMode 
+withiTunesId:(NSString *)iTunesId;` for compatibility.
+------------------------------------------------------------------------
+Version Number   : 1/1.6.3
+Release Date     : 25-July-2015
+Notes:
+1. Growth "utm_source" automatically share to some common channels, such as Facebook, Twitter,
+   Sina Weibo, Tencent Weibo, Email, SMS.
+2. Growth add more parameters, such as "utm_source", "utm_medium", "utm_content" and "utm_term".
+3. Remove "iTunesId" in API "registerInstallForApp", ituensId can be setup by web console after App release.
+4. Implement "app_status/reregister" to make client install to refresh to new one.
+5. Fix bug of slide view show margin in iOS 8.
+6. Fix bug of parsing notification payload "sound" and "badge".
+7. Fix bug of Phonegap and Titanium when App not launch and receive notification, confirm dialog 
+   should not promote.
+8. Refine when server in maintenance. 
+------------------------------------------------------------------------
 Version Number   : 1/1.6.2
 Release Date     : 15-July-2015
 Notes:

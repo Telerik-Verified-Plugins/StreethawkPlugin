@@ -96,11 +96,6 @@ FOUNDATION_EXPORT void SHLog(NSString *format, ...);
  */
 + (BOOL)checkSentApnsModeForFreshInstall;
 
-/**
- As for some reason local App needs to be treated as a fresh new install. This function clear necessary local NSUserDefaults and SQLite so that it starts from beginning.
- */
-+ (void)clearLocalToMakeFreshInstall;
-
 @end
 
 #import "StreetHawkApp.h"

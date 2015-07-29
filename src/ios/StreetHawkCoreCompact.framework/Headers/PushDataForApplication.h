@@ -86,6 +86,17 @@ enum SHSlideDirection
 typedef enum SHSlideDirection SHSlideDirection;
 
 /**
+ An enum to treat App in FG or BG. Normally uses `SHAppFGBG_Unknown` to let App decide by `[UIApplication sharedApplication].applicationState`, however Titanium always return `UIApplicationStateActive`, and instead imlement FG or BG by its own payload, so extent API to be able to decide FG or BG.
+ */
+enum SHAppFGBG
+{
+    SHAppFGBG_Unknown,
+    SHAppFGBG_FG,
+    SHAppFGBG_BG,
+};
+typedef enum SHAppFGBG SHAppFGBG;
+
+/**
  Object which contains information from notification.
  */
 @interface PushDataForApplication : NSObject

@@ -38,11 +38,11 @@ typedef void (^SHOpenUrlHandler)(NSURL *openUrl);
  
  - SHApp is singleton, access it by `[SHApp sharedInstance]` or `StreetHawk`.
  
- - When your Application starts, usually in `- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`, call  `registerInstallForApp:withDebugMode:withiTunesId:` to initialize all required StreetHawk features.
+ - When your Application starts, usually in `- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`, call  `registerInstallForApp:withDebugMode:` to initialize all required StreetHawk features.
  
      This is simple, here are a few lines of sample code: 
  
-        [StreetHawk registerInstallForApp:appId(registered with the StreetHawk Cloud) withDebugMode:Yes withiTunesId:@"123456"(string id register in AppStore)];
+        [StreetHawk registerInstallForApp:appId(registered with the StreetHawk Cloud) withDebugMode:Yes];
  
  - Add tag for user is simple, code like:
  
@@ -90,19 +90,23 @@ typedef void (^SHOpenUrlHandler)(NSURL *openUrl);
                2. If 1 pass nil or empty, check property `StreetHawk.appKey`.
                3. If 1 and 2 still nill or empty, check InfoPlist `APP_KEY`.
  @param isDebugMode The mode of whether print NSLog in Xcode console.
- @param iTunesId The App id after register in iTunes, for example @"337064413". It used for rating App, if this id is not setup, rating dialog will not promote.
+ */
+- (void)registerInstallForApp:(NSString *)appKey withDebugMode:(BOOL)isDebugMode;
+
+/**
+ Deprecated, use `- (void)registerInstallForApp:(NSString *)appKey withDebugMode:(BOOL)isDebugMode;` instead. `iTunesId` is setup in web console, or by property `@property (nonatomic, strong) NSString *itunesAppId;`.
  */
 - (void)registerInstallForApp:(NSString *)appKey withDebugMode:(BOOL)isDebugMode withiTunesId:(NSString *)iTunesId;
 
 /** @name Global properties */
 
 /**
- The allocated name or code for this app as set in the StreetHawk Cloud, for example "SHSheridan1". It's mandatory for an Application to work. Check `- (void)registerInstallForApp:(NSString *)appKey withDebugMode:(BOOL)isDebugMode withiTunesId:(NSString *)iTunesId` for how it works.
+ The allocated name or code for this app as set in the StreetHawk Cloud, for example "SHSheridan1". It's mandatory for an Application to work. Check `- (void)registerInstallForApp:(NSString *)appKey withDebugMode:(BOOL)isDebugMode` for how it works.
  */
 @property (nonatomic, strong) NSString *appKey;
 
 /**
- Set up default host url, it's the starting url. Normally customers does not need to set it, and use "https://api.streethawk.com" as starting url. Some test App can set it be "https://dev.streethawk.com". It's only used for initialise, set this before call `registerInstallForApp:withDebugMode:withiTunesId:`.
+ Set up default host url, it's the starting url. Normally customers does not need to set it, and use "https://api.streethawk.com" as starting url. Some test App can set it be "https://dev.streethawk.com". It's only used for initialise, set this before call `registerInstallForApp:withDebugMode:`.
  */
 - (void)setDefaultStartingUrl:(NSString *)defaultUrl;
 
@@ -117,7 +121,7 @@ typedef void (^SHOpenUrlHandler)(NSURL *openUrl);
 @property (nonatomic) BOOL isEnableCrashReport;
 
 /**
- The App id after register in iTunes, for example @"337064413". It used for rating App, if this id is not setup, rating dialog will not promote.
+ The App id after register in iTunes, for example @"337064413". It used for rating and upgrading App, if this id is not setup, rating or upgrading dialog will not promote.
  */
 @property (nonatomic, strong) NSString *itunesAppId;
 
@@ -309,10 +313,11 @@ The application version and build version of current Application, formatted as @
     }`
  
  @param userInfo Payload passed in by remote notification.
+ @param appFGBG The App in FG or BG when notification arrives. If not sure put unknown.
  @param needComplete Whether need to call `completionHandler` when task finish. If `completionHandler`=nil this does not matter YES or NO.
  @param completionHandler Pass in system's to finish when task is done.
  */
-- (void)handleRemoteNotification:(NSDictionary *)userInfo needComplete:(BOOL)needComplete fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
+- (void)handleRemoteNotification:(NSDictionary *)userInfo treatAppAs:(SHAppFGBG)appFGBG needComplete:(BOOL)needComplete fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
 
 /**
  Customer Application should implement this in UIApplicationDelegate to forward handling to StreetHawk library if NOT auto-integrate. If `StreetHawk.autoIntegrateAppDelegate = YES;` make sure NOT call this otherwise cause dead loop. Code snippet:
@@ -338,10 +343,11 @@ The application version and build version of current Application, formatted as @
     }` 
  
  @param notification Object passed in by local notification.
+ @param appFGBG The App in FG or BG when notification arrives. If not sure put unknown.
  @param needComplete Whether need to call `completionHandler` when task finish. If `completionHandler`=nil this does not matter YES or NO.
  @param completionHandler Pass in system's to finish when task is done.
  */
-- (void)handleLocalNotification:(UILocalNotification *)notification needComplete:(BOOL)needComplete fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
+- (void)handleLocalNotification:(UILocalNotification *)notification treatAppAs:(SHAppFGBG)appFGBG needComplete:(BOOL)needComplete fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
 
 /**
  Customer Application should implement this in UIApplicationDelegate to forward handling to StreetHawk library if NOT auto-integrate. If `StreetHawk.autoIntegrateAppDelegate = YES;` make sure NOT call this otherwise cause dead loop. Code snippet:
@@ -591,16 +597,34 @@ The application version and build version of current Application, formatted as @
  */
 - (void)sendLogForFeed:(NSInteger)feed_id withResult:(SHResult)result;
 
-/** @name Pointzi */
+/** @name Growth */
 
 /**
- Call this function to share and invite friend.
+ Call this function to share and invite friend. It will return a callback with share url, and customer developer is responsible to perform the action to share.
  
- @param utm_campaign Optional, for identify how this share is used for. For example in a book App, it would be "Child", "Computer", "Poetry".
+ @param utm_campaign Optional, for identify how this share is used for. For example in a book App, it would be "Child", "Computer", "Poetry". It's an Id to be used in StreetHawk Analytics.
+ @param utm_source Optional, indicate where share url will be posted (Example facebook, twitter, whatsapp etc). It's free text string.
+ @param utm_medium Optional, medium as url will be posted. For example cpc.
+ @param utm_content Optional, content of campaign.
+ @param utm_term Optional, keywords for campaing.
  @param shareUrl Optional, share url which will open App by browser link. For example, to open App page with parameter, url like "hawk://launchVC?vC=Deep%20Linking&param1=this%20is%20a%20test&param2=123".
+ @param default_url Optional, fallback url if user opens url not on iOS or Android mobile devices. It's a normal url to display on browser, for example the developer's website which describes the App, like http://www.myapp.com.
  @param handler Share result callback handler, when successfully share `result` is share_guid_url, otherwise it contains error.
  */
-- (void)originateShareWithCampaign:(NSString *)utm_campaign shareUrl:(NSURL *)shareUrl streetHawkGrowth_object:(SHCallbackHandler)handler;
+- (void)originateShareWithCampaign:(NSString *)utm_campaign withSource:(NSString *)utm_source withMedium:(NSString *)utm_medium withContent:(NSString *)utm_content withTerm:(NSString *)utm_term shareUrl:(NSURL *)shareUrl withDestinationUrl:(NSURL *)default_url streetHawkGrowth_object:(SHCallbackHandler)handler;
+
+/**
+ Call this function to share and invite friend. It will promote a list of StreetHawk supporting share channel, and after user choose the channel, the share content will be shared automatically.
+ 
+ @param utm_campaign Optional, for identify how this share is used for. For example in a book App, it would be "Child", "Computer", "Poetry". It's an Id to be used in StreetHawk Analytics.
+ @param utm_medium Optional, medium as url will be posted. For example cpc.
+ @param utm_content Optional, content of campaign.
+ @param utm_term Optional, keywords for campaing.
+ @param shareUrl Optional, share url which will open App by browser link. For example, to open App page with parameter, url like "hawk://launchVC?vC=Deep%20Linking&param1=this%20is%20a%20test&param2=123".
+ @param default_url Optional, fallback url if user opens url not on iOS or Android mobile devices. It's a normal url to display on browser, for example the developer's website which describes the App, like http://www.myapp.com.
+ @param message The message text which will display in share channel, such as "I would like to recommend an excellent book to you.".
+ */
+- (void)originateShareWithCampaign:(NSString *)utm_campaign withMedium:(NSString *)utm_medium withContent:(NSString *)utm_content withTerm:(NSString *)utm_term shareUrl:(NSURL *)shareUrl withDestinationUrl:(NSURL *)default_url withMessage:(NSString *)message;
 
 /** @name Permission */
 
