@@ -210,8 +210,8 @@ SHLibrary.prototype.sendPushResult = function(String_msgId,int_result) {
     exec(success,fail, 'Streethawk', 'sendPushResult', [String_msgId, int_result]);
 }
 
-SHLibrary.prototype.InviteFriendsToDownloadApplication = function(String_ID,String_deeplinkUrl,String_EmailSubject,String_EmailBody) {
-    exec(success,fail, 'Streethawk', 'InviteFriendsToDownloadApplication', [String_ID,String_deeplinkUrl,String_EmailSubject,String_EmailBody]);
+SHLibrary.prototype.InviteFriendsToDownloadApplication = function(string_utm_campaign, string_utm_medium, string_utm_content, string_utm_term, string_shareUrl, string_default_url, string_message) {
+    exec(success,fail, 'Streethawk', 'InviteFriendsToDownloadApplication', [string_utm_campaign, string_utm_medium, string_utm_content, string_utm_term, string_shareUrl, string_default_url, string_message]);
 }
 
 SHLibrary.prototype.forcePushToNotificationBar = function(bool_status) {
@@ -226,8 +226,8 @@ SHLibrary.prototype.notifyNewFeedCallback = function(appSuccess, appFail) {
     exec(appSuccess,appFail, 'Streethawk', 'notifyNewFeedCallback', []);
 }
 
-SHLibrary.prototype.originateShareWithCampaign = function(string_ID,string_shareUrl,appSuccess, appFail) {
-    exec(appSuccess,appFail, 'Streethawk', 'getShareUrlForAppDownload', [string_ID,string_shareUrl]);
+SHLibrary.prototype.originateShareWithCampaign = function(string_utm_campaign, string_utm_source, string_utm_medium, string_utm_content, string_utm_term, string_shareUrl, string_default_url, appSuccess, appFail) {
+    exec(appSuccess,appFail, 'Streethawk', 'getShareUrlForAppDownload', [string_utm_campaign, string_utm_source, string_utm_medium, string_utm_content, string_utm_term, string_shareUrl, string_default_url]);
 }
 
 SHLibrary.prototype.setAppKey = function(string_AppKey) {

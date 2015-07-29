@@ -17,9 +17,8 @@
  */
 
 #import "Streethawk.h"
-#import <MessageUI/MessageUI.h>
 
-@interface Streethawk () <MFMailComposeViewControllerDelegate>
+@interface Streethawk ()
 
 @property (nonatomic, strong) CDVInvokedUrlCommand *callbackCommandForRegisterView;  //remember command to be used for callback
 @property (nonatomic, strong) CDVInvokedUrlCommand *callbackCommandForRawJson;
@@ -40,7 +39,7 @@
 - (void)streethawkinit:(CDVInvokedUrlCommand *)command
 {
     CDVPluginResult *pluginResult = nil;
-    [StreetHawk registerInstallForApp:nil/*read from Info.plist APP_KEY*/ withDebugMode:StreetHawk.isDebugMode withiTunesId:StreetHawk.itunesAppId];
+    [StreetHawk registerInstallForApp:nil/*read from Info.plist APP_KEY*/ withDebugMode:StreetHawk.isDebugMode];
     [StreetHawk shPGHtmlReceiver:self]; //register as html page load observer.
     [StreetHawk shSetCustomiseHandler:self]; //register as customise handler.
     self.dictPushMsgHandler = [NSMutableDictionary dictionary];
@@ -446,31 +445,47 @@
 {
     self.callbackCommandForShareUrl = command;
     CDVPluginResult *pluginResult = nil;
-    if (command.arguments.count == 2)
+    if (command.arguments.count == 7)
     {
-        if ([command.arguments[0] isKindOfClass:[NSString class]] && [command.arguments[1] isKindOfClass:[NSString class]])
+        if ([command.arguments[0] isKindOfClass:[NSString class]] && [command.arguments[1] isKindOfClass:[NSString class]] && [command.arguments[2] isKindOfClass:[NSString class]] && [command.arguments[3] isKindOfClass:[NSString class]] && [command.arguments[4] isKindOfClass:[NSString class]] && [command.arguments[5] isKindOfClass:[NSString class]] && [command.arguments[6] isKindOfClass:[NSString class]])
         {
-            NSString *campaign = command.arguments[0];
-            NSString *deeplinking = command.arguments[1];
-            NSURL *deeplinkingUrl = nil;
-            if (deeplinking != nil && deeplinking.length > 0)
+            NSString *utm_campaign = command.arguments[0];
+            NSString *utm_source = command.arguments[1];
+            NSString *utm_medium = command.arguments[2];
+            NSString *utm_content = command.arguments[3];
+            NSString *utm_term = command.arguments[4];
+            NSString *shareUrlStr = command.arguments[5];
+            NSString *defaultUrlStr = command.arguments[6];
+            NSURL *shareUrl = nil;
+            if (!strIsEmpty(shareUrlStr))
             {
-                deeplinkingUrl = [NSURL URLWithString:deeplinking];
-                if (deeplinkingUrl == nil)
+                shareUrl = [NSURL URLWithString:shareUrlStr];
+                if (shareUrl == nil)
                 {
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Command 2 is not valid url format, correct it or set empty."];
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Command 6 is not valid url format, correct it or set empty."];
                     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                     return;
                 }
             }
-            [StreetHawk originateShareWithCampaign:campaign shareUrl:deeplinkingUrl streetHawkGrowth_object:^(id result, NSError *error)
-             {
-                 if (self.callbackCommandForShareUrl != nil) //do automatically handling
+            NSURL *defaultUrl = nil;
+            if (!strIsEmpty(defaultUrlStr))
+            {
+                defaultUrl = [NSURL URLWithString:defaultUrlStr];
+                if (defaultUrl == nil)
+                {
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Command 7 is not valid url format, correct it or set empty."];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                    return;
+                }
+            }
+            [StreetHawk originateShareWithCampaign:utm_campaign withSource:utm_source withMedium:utm_medium withContent:utm_content withTerm:utm_term shareUrl:shareUrl withDestinationUrl:defaultUrl streetHawkGrowth_object:^(NSObject *result, NSError *error)
+            {
+                if (self.callbackCommandForShareUrl != nil) //do automatically handling
                  {
                      CDVPluginResult *pluginResult = nil;
                      if (error == nil)
                      {
-                         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
+                         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:(NSString *)result];
                      }
                      else
                      {
@@ -483,12 +498,12 @@
         }
         else
         {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Parameters expect [campaign_string, deeplinkUrl_string]."];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Parameters expect [utm_campaign_string, utm_source_string, utm_medium_string, utm_content_string, utm_term_string, shareUrl_string, default_url_string]."];
         }
     }
     else
     {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Wrong number of parameters, expect 2."];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Wrong number of parameters, expect 7."];
     }
     if (pluginResult != nil)
     {
@@ -499,60 +514,50 @@
 - (void)InviteFriendsToDownloadApplication:(CDVInvokedUrlCommand *)command
 {
     CDVPluginResult *pluginResult = nil;
-    if (command.arguments.count == 4)
+    if (command.arguments.count == 7)
     {
-        if ([command.arguments[0] isKindOfClass:[NSString class]] && [command.arguments[1] isKindOfClass:[NSString class]] && [command.arguments[2] isKindOfClass:[NSString class]] && [command.arguments[3] isKindOfClass:[NSString class]])
+        if ([command.arguments[0] isKindOfClass:[NSString class]] && [command.arguments[1] isKindOfClass:[NSString class]] && [command.arguments[2] isKindOfClass:[NSString class]] && [command.arguments[3] isKindOfClass:[NSString class]] && [command.arguments[4] isKindOfClass:[NSString class]] && [command.arguments[5] isKindOfClass:[NSString class]] && [command.arguments[6] isKindOfClass:[NSString class]])
         {
-            NSString *campaign = command.arguments[0];
-            NSString *deeplinking = command.arguments[1];
-            NSString *emailTitle = command.arguments[2];
-            NSString *emailBody = command.arguments[3];
-            NSURL *deeplinkingUrl = nil;
-            if (deeplinking != nil && deeplinking.length > 0)
+            NSString *utm_campaign = command.arguments[0];
+            NSString *utm_medium = command.arguments[1];
+            NSString *utm_content = command.arguments[2];
+            NSString *utm_term = command.arguments[3];
+            NSString *shareUrlStr = command.arguments[4];
+            NSString *defaultUrlStr = command.arguments[5];
+            NSString *message = command.arguments[6];
+            NSURL *shareUrl = nil;
+            if (!strIsEmpty(shareUrlStr))
             {
-                deeplinkingUrl = [NSURL URLWithString:deeplinking];
-                if (deeplinkingUrl == nil)
+                shareUrl = [NSURL URLWithString:shareUrlStr];
+                if (shareUrl == nil)
                 {
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Command 2 is not valid url format, correct it or set empty."];
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Command 5 is not valid url format, correct it or set empty."];
                     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                     return;
                 }
             }
-            [StreetHawk originateShareWithCampaign:campaign shareUrl:deeplinkingUrl streetHawkGrowth_object:^(id result, NSError *error)
-             {
-                 presentErrorAlert(error, YES);
-                 if (error == nil)
-                 {
-                     dispatch_async(dispatch_get_main_queue(), ^
-                        {
-                            NSString *shareUrl = result;
-                            if ([MFMailComposeViewController canSendMail])
-                            {
-                                MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
-                                mc.mailComposeDelegate = self;
-                                [mc setMessageBody:[NSString stringWithFormat:@"%@\n\n%@", emailBody, shareUrl] isHTML:NO];
-                                [mc setSubject:emailTitle];
-                                UIWindow *window = [UIApplication sharedApplication].windows[0];
-                                [window.rootViewController presentViewController:mc animated:YES completion:nil];
-                            }
-                            else
-                            {
-                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"share_guid_url" message:shareUrl delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-                                [alert show];
-                            }
-                        });
-                 }
-             }];
+            NSURL *defaultUrl = nil;
+            if (!strIsEmpty(defaultUrlStr))
+            {
+                defaultUrl = [NSURL URLWithString:defaultUrlStr];
+                if (defaultUrl == nil)
+                {
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Command 6 is not valid url format, correct it or set empty."];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                    return;
+                }
+            }
+            [StreetHawk originateShareWithCampaign:utm_campaign withMedium:utm_medium withContent:utm_content withTerm:utm_term shareUrl:shareUrl withDestinationUrl:defaultUrl withMessage:message];
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         }
         else
         {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Parameters expect [campaign_string, deeplinkUrl_string, emailSubject_string, emailBody_string]."];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Parameters expect [utm_campaign_string, utm_medium_string, utm_content_string, utm_term_string, shareUrl_string, default_url_string, message_string]."];
         }
     }
     else
     {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Wrong number of parameters, expect 4."];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Wrong number of parameters, expect 7."];
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -933,16 +938,6 @@
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackCommandForPushResult.callbackId];
-    }
-}
-
-#pragma mark - MFMailComposeViewControllerDelegate
-
-- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
-{
-    if (!error)
-    {
-        [controller dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
