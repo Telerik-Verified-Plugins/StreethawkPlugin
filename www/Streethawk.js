@@ -49,24 +49,24 @@ SHLibrary.prototype.streethawkinit = function() {
     
 }
 
-SHLibrary.prototype.tagNumeric = function(string_key, numeric_value) {
-    exec(success,fail, 'Streethawk', 'tagNumeric', [string_key, numeric_value]);
+SHLibrary.prototype.tagNumeric = function(string_key, numeric_value, appSuccess, appFail) {
+    exec(appSuccess, appFail, 'Streethawk', 'tagNumeric', [string_key, numeric_value]);
 }
 
-SHLibrary.prototype.tagString = function(string_key, string_value) {
-    exec(success, fail, 'Streethawk', 'tagString', [string_key, string_value]);
+SHLibrary.prototype.tagString = function(string_key, string_value, appSuccess, appFail) {
+    exec(appSuccess, appFail, 'Streethawk', 'tagString', [string_key, string_value]);
 }
 
-SHLibrary.prototype.tagDatetime = function(string_key, datetime_value) {
-    exec(success, fail, 'Streethawk', 'tagDatetime', [string_key, datetime_value]);
+SHLibrary.prototype.tagDatetime = function(string_key, datetime_value, appSuccess, appFail) {
+    exec(appSuccess, appFail, 'Streethawk', 'tagDatetime', [string_key, datetime_value]);
 }
 
-SHLibrary.prototype.incrementTag = function(string_key) {
-    exec(success, fail, 'Streethawk', 'incrementTag', [string_key]);
+SHLibrary.prototype.incrementTag = function(string_key, appSuccess, appFail) {
+    exec(appSuccess, appFail, 'Streethawk', 'incrementTag', [string_key]);
 }
 
-SHLibrary.prototype.removeTag = function(string_key) {
-    exec(success, fail, 'Streethawk', 'removeTag', [string_key]);
+SHLibrary.prototype.removeTag = function(string_key, appSuccess, appFail) {
+    exec(appSuccess, appFail, 'Streethawk', 'removeTag', [string_key]);
 }
 
 SHLibrary.prototype.sendLogForTagUser = function(dict_tag) {

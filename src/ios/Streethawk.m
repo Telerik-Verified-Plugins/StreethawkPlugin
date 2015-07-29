@@ -56,8 +56,8 @@
         {
             NSString *key = command.arguments[0];
             double value = [command.arguments[1] doubleValue];
-            [StreetHawk tagNumeric:value forKey:key];
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            BOOL ret = [StreetHawk tagNumeric:value forKey:key];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:ret];
         }
         else
         {
@@ -80,8 +80,8 @@
         {
             NSString *key = command.arguments[0];
             NSString *value = command.arguments[1];
-            [StreetHawk tagString:value forKey:key];
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            BOOL ret = [StreetHawk tagString:value forKey:key];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:ret];
         }
         else
         {
@@ -114,8 +114,8 @@
             }
             if (value != nil)
             {
-                [StreetHawk tagDatetime:value forKey:key];
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+                BOOL ret = [StreetHawk tagDatetime:value forKey:key];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:ret];
             }
             else
             {
@@ -142,8 +142,8 @@
         if ([command.arguments[0] isKindOfClass:[NSString class]])
         {
             NSString *key = command.arguments[0];
-            [StreetHawk incrementTag:key];
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            BOOL ret = [StreetHawk incrementTag:key];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:ret];
         }
         else
         {
@@ -165,8 +165,8 @@
         if ([command.arguments[0] isKindOfClass:[NSString class]])
         {
             NSString *key = command.arguments[0];
-            [StreetHawk removeTag:key];
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            BOOL ret = [StreetHawk removeTag:key];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:ret];
         }
         else
         {
