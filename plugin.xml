@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="com.streethawk.plugin" version="1.6.2" xmlns="http://apache.org/cordova/ns/plugins/1.0"
+<plugin id="com.streethawk.plugin" version="1.6.4" xmlns="http://apache.org/cordova/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<name>StreetHawk</name>
 	<description> StreetHawk is a mobile engagement automation library for your smartphone and tablet apps. Engage users in the right time using push messaging, emails and sms, segment your user base, create geofences to trigger location based campaigns or ibeacons for proximity based campaigns,measure share and measure app virality and organic growth, deeplinking and app indexing, mobile analytics measure campaign performance and more. StreetHawk supports both iOS and Android devices.For more information vists streethawk.com</description>	    
