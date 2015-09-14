@@ -1,19 +1,18 @@
 /*
- * Copyright 2012 StreetHawk
+ * Copyright (c) StreetHawk, All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * Created by Christine XYS. 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
  */
 
 #import <UIKit/UIKit.h>
@@ -26,30 +25,50 @@ FOUNDATION_EXPORT const unsigned char StreetHawkCoreCompactVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <StreetHawkCoreCompact/PublicHeader.h>
 
-//folder Public/
+//Core
+//  Internal
+#import <StreetHawkCoreCompact/SHAlertView.h> //can be private, but sample App use it.
+#import <StreetHawkCoreCompact/SHInstall.h>
+#import <StreetHawkCoreCompact/SHInstallHandler.h>
+#import <StreetHawkCoreCompact/SHLogger.h>
+#import <StreetHawkCoreCompact/SHObject.h>
+#import <StreetHawkCoreCompact/SHRequest.h>
+#import <StreetHawkCoreCompact/SHUtils.h>
+#import <StreetHawkCoreCompact/SHViewController.h>
+//  Publish
+#import <StreetHawkCoreCompact/PushDataForApplication.h>
+#import <StreetHawkCoreCompact/SHApp.h>
+#import <StreetHawkCoreCompact/SHBaseViewController.h>
+#import <StreetHawkCoreCompact/SHFriendlyNameObject.h>
+#import <StreetHawkCoreCompact/SHTypes.h>
+
+//Crash
+//  Internal
+#import <StreetHawkCoreCompact/SHCrashHandler.h>
+//  Publish
+#import <StreetHawkCoreCompact/SHApp+Crash.h>
+
+//Feed
+//  Publish
+#import <StreetHawkCoreCompact/SHFeedObject.h>
+#import <StreetHawkCoreCompact/SHApp+Feed.h>
+
+//Growth
+//  Publish
+#import <StreetHawkCoreCompact/SHApp+Growth.h>
+
+//Location
+//  Internal
+#import <StreetHawkCoreCompact/SHLocationManager.h>
+//  Publish
+#import <StreetHawkCoreCompact/SHApp+Location.h>
+
+//Notification
+//  Internal
+#import <StreetHawkCoreCompact/SHAlertSettingsViewController.h> //can be private, but sample App use it.
+#import <StreetHawkCoreCompact/SHNotificationHandler.h>
+#import <StreetHawkCoreCompact/SHSlideViewController.h> //can be private, but sample App use it.
+//  Publish
 #import <StreetHawkCoreCompact/ISHCustomiseHandler.h>
 #import <StreetHawkCoreCompact/ISHPhonegapObserver.h>
-#import <StreetHawkCoreCompact/StreetHawkApp.h>
-#import <StreetHawkCoreCompact/StreetHawkLocationManager.h>
-#import <StreetHawkCoreCompact/StreetHawkNotificationHandler.h>
-#import <StreetHawkCoreCompact/StreetHawkRequest.h>
-#import <StreetHawkCoreCompact/StreetHawkUtils.h>
-
-//folder Public/Internal/
-#import <StreetHawkCoreCompact/StreetHawkCrashHandler.h>
-#import <StreetHawkCoreCompact/StreetHawkInstallHandler.h>
-#import <StreetHawkCoreCompact/StreetHawkLogger.h>
-
-//folder Public/Object/
-#import <StreetHawkCoreCompact/StreetHawkFeedObject.h>
-#import <StreetHawkCoreCompact/StreetHawkFriendlyNameObject.h>
-#import <StreetHawkCoreCompact/StreetHawkInstall.h>
-#import <StreetHawkCoreCompact/StreetHawkObject.h>
-
-//folder Public/UI/
-#import <StreetHawkCoreCompact/StreetHawkActionSheet.h>
-#import <StreetHawkCoreCompact/StreetHawkAlertSettingsViewController.h>
-#import <StreetHawkCoreCompact/StreetHawkAlertView.h>
-#import <StreetHawkCoreCompact/StreetHawkBaseViewController.h>
-#import <StreetHawkCoreCompact/StreetHawkSlideViewController.h>
-
+#import <StreetHawkCoreCompact/SHApp+Notification.h>

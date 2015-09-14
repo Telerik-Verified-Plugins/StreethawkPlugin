@@ -1,3 +1,15 @@
+Version Number   : 1/1.6.6
+Release Date     : 8-September-2015
+Notes:
+1. Source code moved to open source repository.
+2. Customer handle deeplinking url and SDK can update view count. 
+3. Send wrong data in push notification. If App launch from BG update view count; if App in FG do nothing.
+------------------------------------------------------------------------
+Version Number   : 1/1.6.5
+Release Date     : 28-August-2015
+Notes:
+1. Rename utility function name by prefix "sh" to avoid conflict link error with other library.
+------------------------------------------------------------------------
 Version Number   : 1/1.6.4
 Release Date     : 27-July-2015
 Notes:

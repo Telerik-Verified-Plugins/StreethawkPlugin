@@ -110,7 +110,7 @@
             }
             if ([command.arguments[1] isKindOfClass:[NSString class]])
             {
-                value = parseDate(command.arguments[1], 0);
+                value = shParseDate(command.arguments[1], 0);
             }
             if (value != nil)
             {
@@ -457,7 +457,7 @@
             NSString *shareUrlStr = command.arguments[5];
             NSString *defaultUrlStr = command.arguments[6];
             NSURL *shareUrl = nil;
-            if (!strIsEmpty(shareUrlStr))
+            if (!shStrIsEmpty(shareUrlStr))
             {
                 shareUrl = [NSURL URLWithString:shareUrlStr];
                 if (shareUrl == nil)
@@ -468,7 +468,7 @@
                 }
             }
             NSURL *defaultUrl = nil;
-            if (!strIsEmpty(defaultUrlStr))
+            if (!shStrIsEmpty(defaultUrlStr))
             {
                 defaultUrl = [NSURL URLWithString:defaultUrlStr];
                 if (defaultUrl == nil)
@@ -478,7 +478,7 @@
                     return;
                 }
             }
-            [StreetHawk originateShareWithCampaign:utm_campaign withSource:utm_source withMedium:utm_medium withContent:utm_content withTerm:utm_term shareUrl:shareUrl withDestinationUrl:defaultUrl streetHawkGrowth_object:^(NSObject *result, NSError *error)
+            [StreetHawk originateShareWithCampaign:utm_campaign withSource:utm_source withMedium:utm_medium withContent:utm_content withTerm:utm_term shareUrl:shareUrl withDefaultUrl:defaultUrl streetHawkGrowth_object:^(NSObject *result, NSError *error)
             {
                 if (self.callbackCommandForShareUrl != nil) //do automatically handling
                  {
@@ -526,7 +526,7 @@
             NSString *defaultUrlStr = command.arguments[5];
             NSString *message = command.arguments[6];
             NSURL *shareUrl = nil;
-            if (!strIsEmpty(shareUrlStr))
+            if (!shStrIsEmpty(shareUrlStr))
             {
                 shareUrl = [NSURL URLWithString:shareUrlStr];
                 if (shareUrl == nil)
@@ -537,7 +537,7 @@
                 }
             }
             NSURL *defaultUrl = nil;
-            if (!strIsEmpty(defaultUrlStr))
+            if (!shStrIsEmpty(defaultUrlStr))
             {
                 defaultUrl = [NSURL URLWithString:defaultUrlStr];
                 if (defaultUrl == nil)
@@ -547,7 +547,7 @@
                     return;
                 }
             }
-            [StreetHawk originateShareWithCampaign:utm_campaign withMedium:utm_medium withContent:utm_content withTerm:utm_term shareUrl:shareUrl withDestinationUrl:defaultUrl withMessage:message];
+            [StreetHawk originateShareWithCampaign:utm_campaign withMedium:utm_medium withContent:utm_content withTerm:utm_term shareUrl:shareUrl withDefaultUrl:defaultUrl withMessage:message];
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         }
         else
@@ -594,7 +594,7 @@
 
 - (void)getCurrentFormattedDateTime:(CDVInvokedUrlCommand *)command
 {
-    NSString *dateStr = formatStreetHawkDate([NSDate date]);
+    NSString *dateStr = shFormatStreetHawkDate([NSDate date]);
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:dateStr];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
