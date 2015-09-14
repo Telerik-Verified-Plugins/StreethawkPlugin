@@ -441,6 +441,56 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)originateShareWithCampaign:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult *pluginResult = nil;
+    if (command.arguments.count == 3)
+    {
+        if ([command.arguments[0] isKindOfClass:[NSString class]] && [command.arguments[1] isKindOfClass:[NSString class]] && [command.arguments[2] isKindOfClass:[NSString class]])
+        {
+            NSString *utm_campaign = command.arguments[0];
+            NSString *shareUrlStr = command.arguments[1];
+            NSString *defaultUrlStr = command.arguments[2];
+            NSURL *shareUrl = nil;
+            if (!shStrIsEmpty(shareUrlStr))
+            {
+                shareUrl = [NSURL URLWithString:shareUrlStr];
+                if (shareUrl == nil)
+                {
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Command 2 is not valid url format, correct it or set empty."];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                    return;
+                }
+            }
+            NSURL *defaultUrl = nil;
+            if (!shStrIsEmpty(defaultUrlStr))
+            {
+                defaultUrl = [NSURL URLWithString:defaultUrlStr];
+                if (defaultUrl == nil)
+                {
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Command 3 is not valid url format, correct it or set empty."];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                    return;
+                }
+            }
+            [StreetHawk originateShareWithCampaign:utm_campaign withMedium:nil withContent:nil withTerm:nil shareUrl:shareUrl withDefaultUrl:defaultUrl withMessage:nil];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        }
+        else
+        {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Parameters expect [utm_campaign_string, shareUrl_string, default_url_string]."];
+        }
+    }
+    else
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Wrong number of parameters, expect 3."];
+    }
+    if (pluginResult != nil)
+    {
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
 - (void)getShareUrlForAppDownload:(CDVInvokedUrlCommand *)command
 {
     self.callbackCommandForShareUrl = command;
@@ -509,57 +559,6 @@
     {
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
-}
-
-- (void)InviteFriendsToDownloadApplication:(CDVInvokedUrlCommand *)command
-{
-    CDVPluginResult *pluginResult = nil;
-    if (command.arguments.count == 7)
-    {
-        if ([command.arguments[0] isKindOfClass:[NSString class]] && [command.arguments[1] isKindOfClass:[NSString class]] && [command.arguments[2] isKindOfClass:[NSString class]] && [command.arguments[3] isKindOfClass:[NSString class]] && [command.arguments[4] isKindOfClass:[NSString class]] && [command.arguments[5] isKindOfClass:[NSString class]] && [command.arguments[6] isKindOfClass:[NSString class]])
-        {
-            NSString *utm_campaign = command.arguments[0];
-            NSString *utm_medium = command.arguments[1];
-            NSString *utm_content = command.arguments[2];
-            NSString *utm_term = command.arguments[3];
-            NSString *shareUrlStr = command.arguments[4];
-            NSString *defaultUrlStr = command.arguments[5];
-            NSString *message = command.arguments[6];
-            NSURL *shareUrl = nil;
-            if (!shStrIsEmpty(shareUrlStr))
-            {
-                shareUrl = [NSURL URLWithString:shareUrlStr];
-                if (shareUrl == nil)
-                {
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Command 5 is not valid url format, correct it or set empty."];
-                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                    return;
-                }
-            }
-            NSURL *defaultUrl = nil;
-            if (!shStrIsEmpty(defaultUrlStr))
-            {
-                defaultUrl = [NSURL URLWithString:defaultUrlStr];
-                if (defaultUrl == nil)
-                {
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Command 6 is not valid url format, correct it or set empty."];
-                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                    return;
-                }
-            }
-            [StreetHawk originateShareWithCampaign:utm_campaign withMedium:utm_medium withContent:utm_content withTerm:utm_term shareUrl:shareUrl withDefaultUrl:defaultUrl withMessage:message];
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        }
-        else
-        {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Parameters expect [utm_campaign_string, utm_medium_string, utm_content_string, utm_term_string, shareUrl_string, default_url_string, message_string]."];
-        }
-    }
-    else
-    {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Wrong number of parameters, expect 7."];
-    }
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 #pragma mark - properties
