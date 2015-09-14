@@ -210,10 +210,6 @@ SHLibrary.prototype.sendPushResult = function(String_msgId,int_result) {
     exec(success,fail, 'Streethawk', 'sendPushResult', [String_msgId, int_result]);
 }
 
-SHLibrary.prototype.InviteFriendsToDownloadApplication = function(string_utm_campaign, string_utm_medium, string_utm_content, string_utm_term, string_shareUrl, string_default_url, string_message) {
-    exec(success,fail, 'Streethawk', 'InviteFriendsToDownloadApplication', [string_utm_campaign, string_utm_medium, string_utm_content, string_utm_term, string_shareUrl, string_default_url, string_message]);
-}
-
 SHLibrary.prototype.forcePushToNotificationBar = function(bool_status) {
     exec(success,fail, 'Streethawk', 'forcePushToNotificationBar', [bool_status]);
 }
@@ -224,6 +220,10 @@ SHLibrary.prototype.shGetFeedDataFromServer = function(int_offset) {
 
 SHLibrary.prototype.notifyNewFeedCallback = function(appSuccess, appFail) {
     exec(appSuccess,appFail, 'Streethawk', 'notifyNewFeedCallback', []);
+}
+
+SHLibrary.prototype.originateShareWithSourceSelection = function(string_ID,string_deepLinkUrl, string_default_url, appSuccess, appFail) {
+    exec(appSuccess,appFail, 'Streethawk', 'originateShareWithCampaign', [string_ID,string_deepLinkUrl, string_default_url]);
 }
 
 SHLibrary.prototype.originateShareWithCampaign = function(string_utm_campaign, string_utm_source, string_utm_medium, string_utm_content, string_utm_term, string_shareUrl, string_default_url, appSuccess, appFail) {

@@ -122,13 +122,6 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan" >
         	</activity>
-        	<activity
-            android:name="com.streethawk.library.SelftestActivity"
-            android:label="Streethawk test"
-            android:launchMode="singleTask"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan" >
-        	</activity>
 		
 		</config-file>
 		<source-file src="src/android/StreethawkLibrary.jar" target-dir="libs/"/>

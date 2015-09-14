@@ -169,6 +169,9 @@ public class Streethawk extends CordovaPlugin implements ISHObserver,ISHFeedItem
             this.mNotifyNewFeedCallback = callbackContext;
             return true;
         }
+        if(action.equals("originateShareWithCampaign")){
+            return originateShareWithCampaign(args);
+        }
 		if(action.equals("shGetViewName")){
 			return shGetViewName(callbackContext);
 		}
@@ -200,9 +203,6 @@ public class Streethawk extends CordovaPlugin implements ISHObserver,ISHFeedItem
 		if(action.equals("sendPushResult")){
 			return sendPushResult(args);
 		}
-		if(action.equals("InviteFriendsToDownloadApplication")){
-			return InviteFriendsToDownloadApplication(args);
-		}
 		if(action.equals("forcePushToNotificationBar")){
 			return forcePushToNotificationBar(args);
 		}
@@ -219,6 +219,14 @@ public class Streethawk extends CordovaPlugin implements ISHObserver,ISHFeedItem
     	String appKey = args.getString(0);	
     	StreetHawk.INSTANCE.setAppKey(appKey);
     	return true;
+    }
+    
+    private boolean originateShareWithCampaign(JSONArray args)throws JSONException{
+        String ID = args.getString(0);
+        String deeplink_url = args.getString(1);
+        String default_url = args.getString(2);
+        StreetHawk.originateShareWithCampaign(cordova.getActivity().getApplicationContext(),ID, deeplink_url, null, null,null, null, default_url,null);
+        return true;
     }
     
     private boolean streethawkInit(){
@@ -246,14 +254,6 @@ public class Streethawk extends CordovaPlugin implements ISHObserver,ISHFeedItem
         boolean status = args.getBoolean(0);	
 		StreetHawk.forcePushToNotificationBar(cordova.getActivity().getApplicationContext(),status);
 		return true;
-    }
-
-    private boolean InviteFriendsToDownloadApplication(JSONArray args)throws JSONException{
-        String ID = args.getString(0);	
-		String deeplink_url = args.getString(1);
-		String EmailSubject = args.getString(2);
-		String EmailBody = args.getString(3);
-        return StreetHawk.InviteFriendsToDownloadApplication(cordova.getActivity().getApplicationContext(),ID,deeplink_url,EmailSubject,EmailBody);
     }
     
     private boolean shReportFeedRead(JSONArray args)throws JSONException{
@@ -424,9 +424,15 @@ public class Streethawk extends CordovaPlugin implements ISHObserver,ISHFeedItem
     }
     
     private void getShareUrlForAppDownload(JSONArray args)throws JSONException{
-     	String ID = args.getString(0);	
-	 	String deeplink_url = args.getString(1);
-	 	StreetHawk.INSTANCE.getShareUrlForAppDownload(cordova.getActivity().getApplicationContext(),ID,deeplink_url,this);
+     	String utm_campaign = args.getString(0);
+        String utm_source =args.getString(1);
+        String utm_medium=args.getString(2);
+        String campaing_content= args.getString(3);
+        String utm_term= args.getString(4);
+        String deeplink_url = args.getString(5);
+        String default_url=args.getString(6);
+
+	 	StreetHawk.INSTANCE.originateShareWithCampaign(cordova.getActivity().getApplicationContext(),utm_campaign,deeplink_url,utm_source,utm_medium,utm_term,campaing_content,deeplink_url,this);
     }
     
     
