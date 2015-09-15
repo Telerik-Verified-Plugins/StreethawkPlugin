@@ -188,7 +188,14 @@
         if ([command.arguments[0] isKindOfClass:[NSString class]] && ((NSString *)command.arguments[0]).length > 0)
         {
             NSString *page = command.arguments[0];
+            NSString *previousPage = [[NSUserDefaults standardUserDefaults] objectForKey:@"PreviousPage"];
+            if ([previousPage isKindOfClass:[NSString class]] && !shStrIsEmpty(previousPage))
+            {
+                [StreetHawk shNotifyPageExit:previousPage];
+            }
             [StreetHawk shNotifyPageEnter:page];
+            [[NSUserDefaults standardUserDefaults] setObject:page forKey:@"PreviousPage"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         }
         else
