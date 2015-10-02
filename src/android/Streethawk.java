@@ -431,8 +431,7 @@ public class Streethawk extends CordovaPlugin implements ISHObserver,ISHFeedItem
         String utm_term= args.getString(4);
         String deeplink_url = args.getString(5);
         String default_url=args.getString(6);
-
-	 	StreetHawk.INSTANCE.originateShareWithCampaign(cordova.getActivity().getApplicationContext(),utm_campaign,deeplink_url,utm_source,utm_medium,utm_term,campaing_content,deeplink_url,this);
+	 	StreetHawk.INSTANCE.originateShareWithCampaign(cordova.getActivity().getApplicationContext(),utm_campaign,deeplink_url,utm_source,utm_medium,utm_term,campaing_content,default_url,this);
     }
     
     
@@ -535,11 +534,13 @@ public class Streethawk extends CordovaPlugin implements ISHObserver,ISHFeedItem
     		PluginResult result = new PluginResult(PluginResult.Status.OK,shareUrl);
     		result.setKeepCallback(true);
     		this.mShareUrlCallBack.sendPluginResult(result);
+			Log.i(TAG,"ShareUrl"+shareUrl);
     		}
     	  }
   		@Override
         public void onReceiveErrorForShareUrl(JSONObject errorResponse){
-  		  if(null!=this.mShareUrlCallBack){
+            Log.e(TAG,"Error response"+errorResponse.toString());
+            if(null!=this.mShareUrlCallBack){
     		PluginResult result = new PluginResult(PluginResult.Status.OK,errorResponse);
     		result.setKeepCallback(true);
     		this.mShareUrlCallBack.sendPluginResult(result);
